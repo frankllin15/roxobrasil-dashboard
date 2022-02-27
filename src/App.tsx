@@ -1,21 +1,21 @@
 import { ApolloProvider } from "@apollo/client";
 import { useState } from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Router } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContex/AuthProvider";
 import { initializeApollo, useApollo } from "./lib/apolloClient";
-import AppRoutes from "./routes";
+import AppRoutes from "./routes/AppRoutes";
 
 const App: React.FC = () => {
   const client = initializeApollo({});
 
   return (
-    <ApolloProvider client={client}>
-      <AuthProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <ApolloProvider client={client}>
+        <AuthProvider>
           <AppRoutes />
-        </BrowserRouter>
-      </AuthProvider>
-    </ApolloProvider>
+        </AuthProvider>
+      </ApolloProvider>
+    </BrowserRouter>
   );
 };
 

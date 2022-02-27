@@ -1,5 +1,7 @@
 import DefaultButton from "@/components/DefatultButton";
+import { SpinnerLoading } from "@/components/icons";
 import { useAuth } from "@/context/AuthContex/AuthProvider";
+import { IError } from "@/lib/graphql";
 import { LOGIN_MUTATION } from "@/lib/graphql/mutation";
 import { useMutation } from "@apollo/client";
 import { useEffect } from "react";
@@ -17,20 +19,23 @@ export const Login: React.FC = () => {
   const [form, setForm] = useState<IForm>({ email: "", password: "" });
   const navigate = useNavigate();
   const { session, login } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [isValid, setIsvalid] = useState(true);
+  // const [requestErrors, setRequestErrors] = useState<IError[]>([]);
 
-  console.log(session);
+  // console.log(requestErrors);
   useEffect(() => {
     if (session?.token) navigate("/dashboard");
   }, [session]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    const { success } = await login(form);
-
+    setLoading(true);
+    const { success, errors } = await login(form);
+    setLoading(false);
     // console.log(success, errors);
 
-    console.log(success, session);
+    if (!success) setIsvalid(false);
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,6 +53,7 @@ export const Login: React.FC = () => {
             required={true}
             value={form?.email}
             className="my-2"
+            onFocus={() => setIsvalid(true)}
           />
           <InputText
             name="password"
@@ -56,11 +62,27 @@ export const Login: React.FC = () => {
             required={true}
             value={form?.password}
             className="my-2"
+            onFocus={() => setIsvalid(true)}
           />
 
-          <DefaultButton type="submit" className="bg-black text-neutral-100">
-            Entrar
-          </DefaultButton>
+          <div className="flex flex-row justify-between items-center">
+            {loading ? (
+              <SpinnerLoading />
+            ) : (
+              <DefaultButton
+                type="submit"
+                className="bg-black text-neutral-100"
+              >
+                Entrar
+              </DefaultButton>
+            )}
+
+            {!isValid && (
+              <p className="text-red-500 font-semibold">
+                Email ou senha inválidos!
+              </p>
+            )}
+          </div>
         </form>
       </div>
     );

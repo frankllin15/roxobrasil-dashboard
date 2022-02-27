@@ -37,7 +37,6 @@ export const AuthProvider: React.FC = ({ children }) => {
         }
       );
     }
-
     return {
       success,
       errors,
