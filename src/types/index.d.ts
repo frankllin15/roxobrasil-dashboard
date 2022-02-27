@@ -5,9 +5,12 @@ export interface IUser {
 }
 
 export interface IAssets {
+  id: number;
   width: number;
   height: number;
   source: string;
+  base64Url: string;
+  mime_type: string;
 }
 
 export interface IVariant {

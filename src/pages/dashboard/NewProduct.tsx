@@ -1,4 +1,4 @@
-import { AssestsInput } from "@/components/AssetsInput";
+import { AssestsInput } from "@/components/Assets/AssetsInput";
 import styled from "styled-components";
 import { TrashIcon } from "@/components/icons/index";
 import DefaultButton from "@/components/DefatultButton";

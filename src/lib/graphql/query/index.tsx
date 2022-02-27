@@ -25,3 +25,23 @@ export const PRODUCTS_QUERY = gql`
     }
   }
 `;
+
+export const ASSETS_QUERY = gql`
+  query Assets($input: GetListInput) {
+    assets(input: $input) {
+      errors {
+        message
+      }
+      success
+
+      items {
+        id
+        source
+        mime_type
+        base64Url
+        width
+        height
+      }
+    }
+  }
+`;
