@@ -26,7 +26,7 @@ export const Aside: React.FC = () => {
         <li>
           <Link to="collections">Coleções</Link>
         </li>
-        <li>Assets</li>
+        <li>Imagens</li>
         <dd>Vendas</dd>
         <li>Pedidos</li>
       </ul>

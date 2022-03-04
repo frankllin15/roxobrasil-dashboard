@@ -20,6 +20,7 @@ export const CREATE_PRODUCT_MUTATION = gql`
     createProduct(input: $input) {
       errors {
         message
+        code
       }
       success
       item {
@@ -27,6 +28,14 @@ export const CREATE_PRODUCT_MUTATION = gql`
         name
         slug
       }
+    }
+  }
+`;
+
+export const DELETE_PRODUCT_MUTATION = gql`
+  mutation DeleteProduct($input: IdInput) {
+    deleteProduct(input: $input) {
+      success
     }
   }
 `;

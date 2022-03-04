@@ -1,33 +1,35 @@
+import { useAuth } from "@/context/AuthContex/AuthProvider";
+import { DELETE_PRODUCT_MUTATION } from "@/lib/graphql/mutation";
 import { IProduct } from "@/types";
-import { Link } from "react-router-dom";
+import { ApolloQueryResult, useMutation } from "@apollo/client";
+import { ProductItem } from "./ProductItem";
 
 interface IProps {
   items: IProduct[];
+  refetch: () => Promise<ApolloQueryResult<any>>;
 }
 
-const Item: React.FC<{ item: IProduct }> = ({ item }) => {
-  return (
-    <li className="bg-zinc-200 shadow-sm h-48 grid grid-cols-[1fr_2fr_1fr_1fr] items-center place-items-center mb-4 p-2 gap-1">
-      <img
-        className="w-36 "
-        src={item.variants[0].assets[0].source}
-        alt=""
-        width={item.variants[0].assets[0].width}
-        height={item.variants[0].assets[0].height}
-      />
-      <span>{item.name}</span>
-      <Link to={`edit/${item.id}`}>Editar</Link>
-      <button className="text-red-400">Deletar</button>
-    </li>
-  );
-};
+export const ProductsList: React.FC<IProps> = ({ items, refetch }) => {
+  const [deleteProduct] = useMutation(DELETE_PRODUCT_MUTATION);
+  const { session } = useAuth();
+  const handleDelete = async (productId: string) => {
+    const {
+      data: {
+        deleteProduct: { success },
+      },
+    } = await deleteProduct({
+      variables: { input: { id: productId } },
+      context: { headers: { Authorization: `Bearer ${session?.token}` } },
+    });
 
-export const ProductsList: React.FC<IProps> = ({ items }) => {
+    if (success) refetch();
+  };
+
   return (
-    <div>
+    <ul>
       {items.map((item, id) => (
-        <Item key={id} item={item} />
+        <ProductItem handleDelete={handleDelete} key={id} item={item} />
       ))}
-    </div>
+    </ul>
   );
 };

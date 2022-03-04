@@ -1,21 +1,17 @@
 import { IAssets } from "@/types";
+import React from "react";
 
 interface IProps {
   item: IAssets;
-  handleClick: (id: number) => void;
-  selectedId: number;
+  handleClick: (id: string) => void;
+  selectedId: string;
 }
 
-export const AssetsCard: React.FC<IProps> = ({
-  item,
-  handleClick,
-  selectedId,
-}) => {
-  console.log(item);
+const AssetsCard: React.FC<IProps> = ({ item, handleClick, selectedId }) => {
   return (
     <div
       onClick={() => handleClick(item.id)}
-      className={`rounded-md shadow-sm m-2 w-[8rem] md:w-[7rem] ${
+      className={`rounded-md shadow-sm hover:shadow-md duration-200 m-2 w-[8rem] md:w-[7rem] ${
         selectedId == item.id ? "border border-zinc-400" : ""
       }`}
     >
@@ -32,3 +28,5 @@ export const AssetsCard: React.FC<IProps> = ({
     </div>
   );
 };
+
+export default React.memo(AssetsCard);

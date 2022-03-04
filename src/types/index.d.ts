@@ -5,7 +5,7 @@ export interface IUser {
 }
 
 export interface IAssets {
-  id: number;
+  id: string;
   width: number;
   height: number;
   source: string;
@@ -14,7 +14,7 @@ export interface IAssets {
 }
 
 export interface IVariant {
-  id?: String;
+  id?: string;
   name: string;
   slug: string;
   description: string;
@@ -25,10 +25,14 @@ export interface IVariant {
   price: number;
 }
 
+export interface ICollection {
+  id: string;
+}
+
 export interface IProduct {
   name: string;
   description: string;
-  id?: String;
+  id?: string;
   variants: IVariant[];
 }
 

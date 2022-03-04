@@ -1,8 +1,9 @@
 import { useNewProductContext } from "@/context/NewProductContext/NewProductProvider";
 import usePrompt from "@/hooks/usePrompt";
 import { IAssets, IVariant } from "@/types";
-import { Modal, Popper } from "@mui/material";
+import { InputAdornment, Modal, Popper, TextField } from "@mui/material";
 import { ReactEventHandler, useState } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { AssetsModal } from "./Assets/AssetsModal";
 import { AssetsOption } from "./Assets/AssetsOption";
 import { LandscapeIcon, TrashIcon } from "./icons";
@@ -11,14 +12,21 @@ import { WithPopover } from "./Popover";
 
 interface IVariantInput {
   id: number;
-  // handleRemove: (id: number) => void;
+  handleRemove: (id: number) => void;
   // handleChange: (e: any) => void;
-  item: IVariant;
+  // item: IVariant;
 }
 
-export const VariantInput: React.FC<IVariantInput> = ({ id, item }) => {
+export const VariantInput: React.FC<IVariantInput> = ({ id, handleRemove }) => {
   const [openModal, setOpenModal] = useState(false);
   const { newProduct, setNewProduct } = useNewProductContext();
+  const { register, control, formState, watch, clearErrors } = useFormContext();
+  const { fields, append, replace } = useFieldArray({
+    control,
+    name: `variants.${id}.assets`,
+  });
+
+  const watchedAssets = watch(`variants.${id}.assets`);
 
   const handleChange: ReactEventHandler<HTMLInputElement> = (e) => {
     e.target;
@@ -35,22 +43,13 @@ export const VariantInput: React.FC<IVariantInput> = ({ id, item }) => {
     setNewProduct({ ...newProduct, variants });
   };
 
-  const handleRemove = () => {
-    const variants = newProduct.variants.filter((_, _id) => _id !== Number(id));
-    console.log(variants);
-    setNewProduct({ ...newProduct, variants: variants });
-  };
   const handleSelectAssets = (selectedAssets: IAssets) => {
     // Se variants não contiver selectedAssets
     if (
-      !newProduct.variants[Number(id)].assets?.some(
-        (e) => e.id == selectedAssets.id
-      )
+      !watchedAssets?.some((e: { id: string }) => e?.id == selectedAssets.id)
     ) {
-      const variants = newProduct.variants;
-
-      variants[Number(id)].assets.push(selectedAssets);
-      setNewProduct({ ...newProduct, variants });
+      append(selectedAssets);
+      // setNewProduct({ ...newProduct, variants });
       console.log(selectedAssets);
     }
   };
@@ -60,40 +59,37 @@ export const VariantInput: React.FC<IVariantInput> = ({ id, item }) => {
 
   return (
     <li className="border bg-zinc-50 p-2 my-2 grid grid-cols-[200px_1fr] grid-rows-[60px_1fr] gap-2 ">
-      <InputText
-        // value={item}
-        onChange={handleChange}
-        title="SKU"
-        name="SKU"
-        type="text"
-        // required
+      <TextField
+        style={{ margin: ".4rem" }}
+        id={`product-variant-${id}-SKU`}
+        label="SKU"
+        // {...register(`variants.${id}.SKU`, { required: false })}
       />
-      <div className="flex flex-row justify-between items-start">
-        <InputText
-          style={{ width: "100%" }}
-          value={item.name}
-          title="Nome"
-          onChange={handleChange}
-          name="name"
-          type="text"
-          required
+      <div className="flex flex-row justify-between items-center">
+        <TextField
+          style={{ margin: ".4rem", width: "100%" }}
+          id={`product-variant-${id}-name`}
+          label="Nome"
+          {...register(`variants.${id}.name`, {
+            required: "* Campo obrigatorio",
+          })}
         />
-        <button onClick={handleRemove}>
-          <TrashIcon className="w-6 h-6 text-red-400 inline-block" />
+        <button onClick={() => handleRemove(id)}>
+          <TrashIcon className="w-8 h-8 text-red-500 inline-block" />
         </button>
       </div>
       <div className="text-zinc-400">
-        {item.assets.some((e) => e.id) ? (
+        {watchedAssets?.some((e: IAssets) => e) ? (
           <div className="">
             <img
-              src={item.assets[0]?.source}
-              width={item.assets[0]?.width}
-              height={item.assets[0]?.height}
+              src={watchedAssets[0].source}
+              width={watchedAssets[0].width}
+              height={watchedAssets[0].height}
               alt=""
               className="w- border border-zinc-300"
             />
             <div className="my-2 bg-zinc-100">
-              {item.assets.map((e, key) => (
+              {watchedAssets?.map((e: IAssets, key: string) => (
                 <WithPopover
                   key={key}
                   content={<AssetsOption variantId={id} assetsId={e.id} />}
@@ -124,44 +120,35 @@ export const VariantInput: React.FC<IVariantInput> = ({ id, item }) => {
         </button>
       </div>
       <div>
-        <InputText
-          value={item.color}
-          name="color"
-          onChange={(e) => handleChange(e)}
-          type="text"
-          title="Cor"
-          required
-          style={{ display: "inline-flex", margin: ".3rem .5rem .3rem" }}
+        <TextField
+          style={{ margin: ".4rem" }}
+          id="{`product-variant-${id}-color`}"
+          label="Cor"
+          {...register(`variants.${id}.color`, { required: true })}
         />
-        <InputText
-          title="Tamanho"
-          value={item.size}
-          name="size"
-          onChange={(e) => handleChange(e)}
-          type="text"
-          required
-          style={{ display: "inline-flex", margin: ".3rem .5rem .3rem" }}
+        <TextField
+          style={{ margin: ".4rem" }}
+          id={`product-variant-${id}-size`}
+          label="Tamanho"
+          {...register(`variants.${id}.size`, { required: true })}
         />
-        <InputText
-          value={item.price}
-          name="price"
-          onChange={(e) => handleChange(e)}
-          type="number"
-          min={0}
-          title="Preço"
-          step="0.01"
-          required
-          style={{ display: "inline-flex", margin: ".3rem .5rem .3rem" }}
+        <TextField
+          style={{ margin: ".4rem" }}
+          id={`product-variant-${id}-price`}
+          InputProps={{
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+          }}
+          inputProps={{
+            inputMode: "numeric",
+          }}
+          label="Preço"
+          {...register(`variants.${id}.price`, { required: true })}
         />
-        <InputText
-          title="Quantidade"
-          value={item.quantity}
-          name="quantity"
-          type="number"
-          min={0}
-          onChange={(e) => handleChange(e)}
-          required
-          style={{ display: "inline-flex", margin: ".3rem .5rem .3rem" }}
+        <TextField
+          style={{ margin: ".4rem" }}
+          id={`product-variant-${id}-quantity`}
+          label="Quantidade"
+          {...register(`variants.${id}.quantity`, { required: true })}
         />
       </div>
       <Modal

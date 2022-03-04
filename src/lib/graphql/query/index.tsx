@@ -45,3 +45,24 @@ export const ASSETS_QUERY = gql`
     }
   }
 `;
+
+export const COLLECTIONS_QUERY = gql`
+  query Collections($input: GetListInput) {
+    collections(input: $input) {
+      errors {
+        message
+      }
+
+      items {
+        id
+        name
+        products {
+          name
+        }
+        parent {
+          name
+        }
+      }
+    }
+  }
+`;

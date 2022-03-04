@@ -1,14 +1,17 @@
 import styled from "styled-components";
 
 const Field = styled.div`
+  /* box-sizing: border-box; */
   position: relative;
-  display: flex;
+  display: ${({ style }) => style?.display || "flex"};
   flex-direction: column;
-  min-width: 350px;
+  max-width: ${(props) => props.style?.width || "300px"};
+  /* margin: 0.4rem 0.5rem 0.4rem; */
+  margin: ${({ style }) => style?.margin || " .5 0 .5"};
 
   input {
-    width: 100%;
     height: 48px;
+    /* width: 100%; */
     padding: 14px 16px 0 10px;
     outline: 0;
     border: 1px solid #ddd;
@@ -45,16 +48,21 @@ interface IInputText {
   type?: string;
   onChange: (e: any) => void;
   onFocus?: (e: any) => void;
-  value?: string;
+  value?: string | number;
   className?: string;
   pattern?: string;
   disabled?: boolean;
+  min?: number;
+  step?: string;
   required?: boolean;
+  style?: React.CSSProperties;
 }
 const InputText: React.FC<IInputText> = ({
   title,
   name,
   type = "text",
+  min,
+  step,
   onChange,
   onFocus,
   value = "",
@@ -62,9 +70,12 @@ const InputText: React.FC<IInputText> = ({
   pattern = ".*",
   disabled = false,
   required = false,
+  style = {},
 }) => (
-  <Field className={className} title={title}>
+  <Field style={style} className={className} theme={{ style }} title={title}>
     <input
+      step={step}
+      min={min}
       disabled={disabled}
       onChange={(e) => onChange(e)}
       onFocus={onFocus}

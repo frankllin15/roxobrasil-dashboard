@@ -1,5 +1,3 @@
-const arr = ["qtd", "price"]
+const value = "12,1"
 
-let result = arr.includes("name")
-
-console.log(result)
+console.log(Number(value))

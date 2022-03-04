@@ -1,21 +1,10 @@
 import { IAssets } from "@/types";
-import { Box, Modal, Typography } from "@mui/material";
+import { Modal } from "@mui/material";
 import { useState } from "react";
 import { AssetsModal } from "./AssetsModal";
 import { LandscapeIcon } from "../icons";
 
 export const AssestsInput: React.FC = () => {
-  const initialState = [
-    {
-      source: "image 1",
-    },
-    {
-      source: "image 2",
-    },
-    {
-      source: "image 3",
-    },
-  ];
   const [assets, setAssets] = useState<IAssets[]>([]);
 
   const [open, setOpen] = useState(false);
@@ -77,10 +66,7 @@ export const AssestsInput: React.FC = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <AssetsModal
-          handleSelect={handleSelectAssets}
-          handleClose={toggleOpen}
-        />
+        <AssetsModal handleAdd={handleSelectAssets} handleClose={toggleOpen} />
       </Modal>
     </div>
   );

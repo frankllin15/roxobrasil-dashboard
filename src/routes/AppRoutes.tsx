@@ -1,11 +1,9 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import App from "../App";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "../pages/dashboard/index";
 import Home from "../pages/dashboard/Home";
-import { Products } from "../pages/dashboard/Products";
-import { RequireAuth } from "../components/RequireAuth";
+import { ProductsPage } from "../pages/dashboard/products";
 import { Login } from "../pages/Login";
-import { NewProduct } from "@/pages/dashboard/NewProduct";
+import { CreateProductPage } from "@/pages/dashboard/products/CreateProductPage";
 
 const AppRoutes = () => {
   return (
@@ -14,8 +12,8 @@ const AppRoutes = () => {
       <Route path="login" element={<Login />} />
       <Route path="dashboard" element={<Dashboard />}>
         <Route index element={<Home />} />
-        <Route path="products" element={<Products />} />
-        <Route path="create" element={<NewProduct />} />
+        <Route path="products" element={<ProductsPage />} />
+        <Route path="products/create" element={<CreateProductPage />} />
       </Route>
     </Routes>
   );

@@ -49,15 +49,18 @@ export const Login: React.FC = () => {
           <InputText
             name="email"
             onChange={handleChange}
+            type="email"
             title="Email"
             required={true}
             value={form?.email}
             className="my-2"
             onFocus={() => setIsvalid(true)}
+            style={{ width: "300px" }}
           />
           <InputText
             name="password"
             onChange={handleChange}
+            type="password"
             title="Senha"
             required={true}
             value={form?.password}
