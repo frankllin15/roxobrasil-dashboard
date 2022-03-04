@@ -26,7 +26,7 @@ Esse projeto depende da [API Grapql](https://github.com/frankllin15/roxobrasil-b
 #### Entre no diretório do projeto
 
 ```bash
-  cd my-project
+  cd roxobrasil-dashboard
 ```
 
 #### Instale as dependências
